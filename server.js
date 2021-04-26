@@ -2,6 +2,13 @@ const express = require('express')
 const app = express()
 const port = process.env.PORT || 3000
 
+app.all("*", (req, res, next) => {
+  const reqMethod = req.method
+  const reqUrl = req.originalUrl
+  console.log("Request requested: "  + reqMethod + " " + reqUrl)
+  next()
+})
+
 app.get('/', (req, res) => {
   let result = {
     name : "Jimmy"
@@ -17,8 +24,21 @@ app.get('/info', (req, res) => {
     beschrijving: "Dit is de backend van een app om eten te delen",
     url: "N/A"
   }
-  res.status(200)
-  res.json(result)
+  res.status(200).json(result)
+})
+
+//error message voor verkeerde urls
+app.all("*", (req, res) => {
+  const error = {
+    message: "Endpoint does not exist"
+  }
+  res.status(400);
+  res.json(error)
+})
+
+//error handler
+app.use("*", (error, req, res, next) => {
+  res.status(500).json({error: error})
 })
 
 app.listen(port, () => {
