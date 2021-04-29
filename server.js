@@ -1,4 +1,5 @@
 const express = require('express')
+const log = require("tracer").console()
 const app = express()
 const port = process.env.PORT || 3000
 
@@ -17,6 +18,7 @@ app.all("*", (req, res, next) => {
 app.use("/api", mealroutes, homeroutes)
 
 app.get('/info', (req, res) => {
+  log.info("info aangeroepen")
   let result = {
     naam : "Boris Pouw",
     studentnr : 2116083,

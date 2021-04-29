@@ -1,8 +1,9 @@
 const database = require("../dao/database")
+const log = require("tracer").console()
 
 module.exports = {
     create: (req, res, next) => {
-        console.log("meal.create called")
+        log.info("meal.create called")
         const meal = req.body;
         database.add(meal, (err, result) => {
             if (err) {
@@ -15,7 +16,7 @@ module.exports = {
     },
 
     update: (req, res, next) => {
-        console.log("meal.update called")
+        log.info("meal.update called")
         const meal = req.body;
         const id = req.params.mealId
         database.add(meal, id, (err, result) => {
@@ -29,7 +30,7 @@ module.exports = {
     },
 
     update: (req, res, next) => {
-        console.log("meal.update called")
+        log.info("meal.update called")
         const meal = req.body;
         const id = req.params.mealId
         database.add(meal, id, (err, result) => {
@@ -43,7 +44,7 @@ module.exports = {
     },
 
     getAll: (req, res, next) => {
-        console.log("meal.getAll called")
+        log.info("meal.getAll called")
         database.getAll((err, result) => {
             if (err) {
                 next(err)
@@ -55,7 +56,7 @@ module.exports = {
     },
 
     info: (req, res, next) => {
-        console.log("meal.info called") 
+        log.info("meal.info called") 
         const id = req.params.mealId
         database.info(id, (err, result) => {
             if (err) {
@@ -69,7 +70,7 @@ module.exports = {
     },
     
     delete: (req, res, next) => {
-        console.log("meal.delete called")
+        log.info("meal.delete called")
         const id = req.params.mealId
         database.delete(id, (err, result) => {
             if (err) {

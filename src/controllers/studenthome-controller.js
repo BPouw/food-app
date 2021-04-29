@@ -1,9 +1,10 @@
 const database = require("../dao/database")
+const log = require("tracer").console()
 
 module.exports = {
 
     create: (req, res, next) => {
-        console.log("studenthome.create called")
+        log.info("studenthome.create called")
         const home = req.body;
         database.add(home, (err, result) => {
             if (err) {
@@ -16,7 +17,7 @@ module.exports = {
     },
 
     getAll: (req, res, next) => {
-        console.log("studenthome.getAll called")
+        log.info("studenthome.getAll called")
         database.getAll((err, result) => {
             if (err) {
                 next(err)
@@ -29,7 +30,7 @@ module.exports = {
     },
 
     info: (req, res, next) => {
-        console.log("studenthome.info called")
+        log.info("studenthome.info called")
         const homeId = req.params.homeId
         database.info(homeId, (err, result) => {
             if (err) {
@@ -42,7 +43,7 @@ module.exports = {
     },
 
     update: (req, res, next) => {
-        console.log("studenthome.update called")
+        log.info("studenthome.update called")
         const homeId = req.params.homeId
         const home = req.body
         database.update(homeId, home,(err, result) => {
@@ -56,7 +57,7 @@ module.exports = {
     },
 
     delete: (req, res, next) => {
-        console.log("studenthome.delete called")
+        log.info("studenthome.delete called")
         const homeId = req.params.homeId
         database.delete(homeId, (err, result) => {
             if (err) {
@@ -69,7 +70,7 @@ module.exports = {
     },
 
     addStudent: (req, res, next) => {
-        console.log("studenthome.addStudent called")
+        log.info("studenthome.addStudent called")
         const homeId = req.params.homeId
         const student = req.body
         database.addStudent(homeId, student, (err, result) => {
