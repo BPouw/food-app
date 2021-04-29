@@ -7,12 +7,12 @@ router.use(function timeLog(req, res, next) {
     next()
 })
 
-router.post("/api/studenthome", studenthousecontroller.) // maak studentenhuis
-router.get("/api/studenthome?name=:name&city=:city", studenthousecontroller.) // overzicht studenthuizen
-router.get("/api/studenthome/:homeId", studenthousecontroller.) // details van studenthuis
-router.put("/api/studenthome/:homeId", studenthousecontroller.) // update studenthuis
-router.delete("/api/studenthome/:homeId", studenthousecontroller.) // verwijder studenthuis
-router.put("/api/studenthome/:homeId/user", studenthousecontroller.) // voeg student toe aan studenthuis
+router.post("/api/studenthome", studenthousecontroller.create) // maak studentenhuis
+router.get("/api/studenthome?name=:name&city=:city", studenthousecontroller.getAll) // overzicht studenthuizen
+router.get("/api/studenthome/:homeId", studenthousecontroller.info) // details van studenthuis
+router.put("/api/studenthome/:homeId", studenthousecontroller.update) // update studenthuis
+router.delete("/api/studenthome/:homeId", studenthousecontroller.delete) // verwijder studenthuis
+router.put("/api/studenthome/:homeId/user", studenthousecontroller.addStudent) // voeg student toe aan studenthuis
 
 module.exports = router;
 
