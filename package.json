@@ -4,7 +4,7 @@
   "description": "Share your food!",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 0",
+    "test": "mocha test/**/*.test.js --exit",
     "start": "node server.js"
   },
   "keywords": [
@@ -16,6 +16,8 @@
     "express": "^4.17.1"
   },
   "devDependencies": {
+    "chai": "^4.3.4",
+    "chai-http": "^4.3.0",
     "mocha": "^8.3.2"
   }
 }
