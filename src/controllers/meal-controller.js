@@ -2,6 +2,26 @@ const database = require("../dao/meal-database")
 const log = require("tracer").console()
 
 module.exports = {
+
+    validateMeal(req, res, next) {
+        console.log("validate meal");
+        console.log(req.body);
+        try {
+          const { name, descr, available, price, allergies, ingredients } = req.body;
+          assert(typeof name === "string", "name is missing!");
+          assert(typeof descr === "string", "description is missing!");
+          assert(typeof available === "date", "date available is missing!");
+          assert(typeof price === "number", "price is missing!");
+          assert(typeof allergies === "string", "allergy information is missing!");
+          assert(typeof ingredients === "string", "ingredients are missing!");
+          console.log("Meal data is valid");
+          next();
+        } catch (err) {
+          console.log("Meal data is invalid: ", err.message);
+          next({ message: err.message, errCode: 400 });
+        }
+      },
+
     create: (req, res, next) => {
         log.info("meal.create called")
         const meal = req.body;

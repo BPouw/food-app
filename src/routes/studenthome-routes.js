@@ -7,7 +7,7 @@ router.use(function timeLog(req, res, next) {
     next()
 })
 
-router.post("/studenthome", studenthousecontroller.create) // maak studentenhuis
+router.post("/studenthome", studenthousecontroller.validateHome, studenthousecontroller.create) // maak studentenhuis
 router.get("/studenthome", studenthousecontroller.getAll) // overzicht studenthuizen
 router.get("/studenthome/:homeId", studenthousecontroller.info) // details van studenthuis
 router.put("/studenthome/:homeId", studenthousecontroller.update) // update studenthuis

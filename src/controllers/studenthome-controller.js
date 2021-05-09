@@ -4,6 +4,25 @@ const log = require("tracer").console()
 
 module.exports = {
 
+    validateHome(req, res, next) {
+        console.log("validate home");
+        console.log(req.body);
+        try {
+          const { name, street, housenr, zipcode, city, phonenr } = req.body;
+          assert(typeof name === "string", "name is missing!");
+          assert(typeof street === "string", "street is missing!");
+          assert(typeof housenr === "number", "housenumber is missing!");
+          assert(typeof zipcode === "string", "zipcode is missing!");
+          assert(typeof city === "string", "city is missing!");
+          assert(typeof phonenr === "string", "phone number is missing!");
+          console.log("House data is valid");
+          next();
+        } catch (err) {
+          console.log("Home data is invalid: ", err.message);
+          next({ message: err.message, errCode: 400 });
+        }
+      },
+
     create: (req, res, next) => {
         log.info("studenthome.create called")
         const home = req.body;
