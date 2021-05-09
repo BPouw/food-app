@@ -1,4 +1,5 @@
-const database = require("../dao/database")
+const database = require("../dao/home-database")
+const assert = require("assert")
 const log = require("tracer").console()
 
 module.exports = {
@@ -32,7 +33,7 @@ module.exports = {
     info: (req, res, next) => {
         log.info("studenthome.info called")
         const homeId = req.params.homeId
-        database.info(homeId, (err, result) => {
+        database.getById(homeId, (err, result) => {
             if (err) {
                 next(err)
             }

@@ -1,4 +1,4 @@
-const database = require("../dao/database")
+const database = require("../dao/meal-database")
 const log = require("tracer").console()
 
 module.exports = {

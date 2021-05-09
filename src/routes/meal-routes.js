@@ -8,11 +8,11 @@ router.use(function timeLog(req, res, next) {
     next()
 })
 
-router.post("/api/studenthome/:homeId/meal", mealcontroller.create) // Create meal
-router.put("/api/studenthome/:homeId/meal/:mealId", mealcontroller.update) // Update meal
-router.get("/api/studenthome/:homeId/meal", mealcontroller.getAll) // get all meals within a home
-router.get("/api/studenthome/:homeId/meal/:mealId", mealcontroller.info) // Info meal
-router.delete("/api/studenthome/:homeId/meal/:mealId", mealcontroller.delete) // Delete meal
+router.post("/studenthome/:homeId/meal", mealcontroller.create) // Create meal
+router.put("/studenthome/:homeId/meal/:mealId", mealcontroller.update) // Update meal
+router.get("/studenthome/:homeId/meal", mealcontroller.getAll) // get all meals within a home
+router.get("/studenthome/:homeId/meal/:mealId", mealcontroller.info) // Info meal
+router.delete("/studenthome/:homeId/meal/:mealId", mealcontroller.delete) // Delete meal
 
 module.exports = router;
 

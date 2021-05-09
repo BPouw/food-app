@@ -1,4 +1,4 @@
-const express = require('express')
+const express = require("express")
 const log = require("tracer").console()
 const app = express()
 const port = process.env.PORT || 3000
@@ -15,7 +15,8 @@ app.all("*", (req, res, next) => {
   next()
 })
 
-app.use("/api", mealroutes, homeroutes)
+app.use("/api", mealroutes)
+app.use("/api", homeroutes)
 
 app.get('/info', (req, res) => {
   log.info("info aangeroepen")
@@ -28,19 +29,20 @@ app.get('/info', (req, res) => {
   res.status(200).json(result)
 })
 
-//error message voor verkeerde urls
-app.all("*", (req, res) => {
-  const error = {
-    message: "Endpoint does not exist"
-  }
-  res.status(400);
-  res.json(error)
-})
+// Catch-all route
+app.all("*", (req, res, next) => {
+  console.log("Catch-all endpoint aangeroepen");
+  next({ message: "Endpoint '" + req.url + "' does not exist", errCode: 401 });
+});
 
-//error handler
-app.use("*", (error, req, res, next) => {
-  res.status(500).json({error: error})
-})
+// Errorhandler
+app.use((error, req, res, next) => {
+  console.log("Errorhandler called! ", error);
+  res.status(error.errCode).json({
+    error: "Some error occurred",
+    message: error.message,
+  });
+});
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
