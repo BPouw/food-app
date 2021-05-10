@@ -12,9 +12,11 @@ module.exports = {
           assert(typeof name === "string", "name is missing!");
           assert(typeof street === "string", "street is missing!");
           assert(typeof housenr === "number", "housenumber is missing!");
+          assert(zipcode.length == 6, "zipcode wrong format");
           assert(typeof zipcode === "string", "zipcode is missing!");
           assert(typeof city === "string", "city is missing!");
           assert(typeof phonenr === "string", "phone number is missing!");
+          assert(phonenr.length == 10, "phone number wrong format"); 
           console.log("House data is valid");
           next();
         } catch (err) {
