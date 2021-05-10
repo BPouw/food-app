@@ -1,5 +1,6 @@
 const database = require("../dao/meal-database")
 const log = require("tracer").console()
+const assert = require("assert")
 
 module.exports = {
 
