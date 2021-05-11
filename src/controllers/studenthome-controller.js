@@ -17,6 +17,18 @@ module.exports = {
           assert(typeof city === "string", "city is missing!");
           assert(typeof phonenr === "string", "phone number is missing!");
           assert(phonenr.length == 10, "phone number wrong format"); 
+
+          // checking for dupes
+          var isFound = false;
+          var QueryItem = database.db.filter(x => x.street == street && x.housenr == housenr)
+          if (QueryItem.length > 0) {
+              console.log(QueryItem)
+              console.log("Je bent in de if statement")
+              isFound = true;
+          }
+
+          assert(isFound == false, "Address is already registered, talk to your roommates")
+
           console.log("House data is valid");
           next();
         } catch (err) {
@@ -24,6 +36,39 @@ module.exports = {
           next({ message: err.message, errCode: 400 });
         }
       },
+
+      validateHomeForUpdate(req, res, next) {
+        console.log("validate home");
+        console.log(req.body);
+        try {
+          const { name, street, housenr, zipcode, city, phonenr } = req.body;
+          assert(typeof name === "string", "name is missing!");
+          assert(typeof street === "string", "street is missing!");
+          assert(typeof housenr === "number", "housenumber is missing!");
+          assert(zipcode.length == 6, "zipcode wrong format");
+          assert(typeof zipcode === "string", "zipcode is missing!");
+          assert(typeof city === "string", "city is missing!");
+          assert(typeof phonenr === "string", "phone number is missing!");
+          assert(phonenr.length == 10, "phone number wrong format"); 
+
+          // checking for dupes
+          var isFound = false;
+          var QueryItem = database.db.filter(x => x.street == street && x.housenr == housenr)
+          if (QueryItem.length > 0) {
+              isFound = true;
+          }
+
+          assert(isFound == true, "Address doesn't exist")
+
+          console.log("House data is valid");
+          next();
+        } catch (err) {
+          console.log("Home data is invalid: ", err.message);
+          next({ message: err.message, errCode: 400 });
+        }
+      },
+
+
 
     create: (req, res, next) => {
         log.info("studenthome.create called")
@@ -40,12 +85,20 @@ module.exports = {
 
     getAll: (req, res, next) => {
         log.info("studenthome.getAll called")
-        database.getAll((err, result) => {
+        console.log(req.query)
+        let city = req.query.city
+        let name = req.query.name
+        database.getAll(name, city, (err, result) => {
             if (err) {
                 next(err)
             }
             if (result) {
-                res.status(200).json({ status: "succes", result: result})
+                console.log(result)
+                if (result.length == 0) {
+                    res.status(404).json({ status: "no items found"})
+                } else {
+                    res.status(200).json({ status: "succes", result: result})
+                }
             }
         })
 
@@ -59,7 +112,12 @@ module.exports = {
                 next(err)
             }
             if (result) {
-                res.status(200).json({ status: "succes", result: result})
+                console.log(result)
+                if (result.length > 0) {
+                    res.status(200).json({ status: "succes", result: result})
+                } else {
+                    res.status(404).json({ status: "no items found"})
+                }
             }
         })
     },
@@ -86,7 +144,12 @@ module.exports = {
                 next(err)
             }
             if (result) {
-                res.status(200).json({ status: "succes", result: result})
+                if (result.length == 0) {
+                    res.status(404).json({ status: "No home with this ID"})
+                } else {
+                    res.status(200).json({ status: "succes", result: result})
+                }
+
             }
         })
     },

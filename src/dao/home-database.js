@@ -15,14 +15,30 @@ let database = {
     }, timeToWait);
   },
 
-  getAll(callback) {
-    setTimeout(() => {
+  getAll(name, city, callback) {
+
+    if( typeof name == 'undefined' && typeof city == 'undefined') {
       callback(undefined, database.db);
-    }, timeToWait);
+    }
+
+    if(name && city) {
+      var QueryItem = database.db.filter(x => x.city == city && x.name == name)
+      callback(undefined, QueryItem)
+    }
+
+    if (name) {
+      var QueryItem = database.db.filter(x => x.name == name)
+      callback(undefined, QueryItem)
+    }
+
+    if (city) {
+      var QueryItem = database.db.filter(x => x.city == city)
+      callback(undefined, QueryItem)
+    }
+
   },
 
   getById(index, callback) {
-    // var ArrayItem = database.db[index]
     var ArrayItem = database.db.filter(x => x.id == index)
     setTimeout(() => {
         callback(undefined, ArrayItem);
@@ -30,6 +46,9 @@ let database = {
   },
 
   delete(index, callback) {
+    // if (index - 1 > database.db.size) {
+    //   callback(undefined, undefined)
+    // }
     let removed = database.db.splice(index, 1)
     setTimeout(() => {
         callback(undefined, removed);
