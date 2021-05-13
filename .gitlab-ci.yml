@@ -32,7 +32,9 @@ testing:
   image: node:latest
   script:
     - npm i -D mocha
+    - npm i
     - npm run test
+    - npm run sonar
 
 #
 # Deploy to Heroku
