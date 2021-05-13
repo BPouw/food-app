@@ -5,7 +5,9 @@
   "main": "server.js",
   "scripts": {
     "test": "mocha test/**/*.test.js --exit",
-    "start": "node server.js"
+    "start": "node server.js",
+    "coverage": "nyc --reporter=lcov npm run test", 
+    "sonar": "sonar-scanner"
   },
   "keywords": [
     "food"
