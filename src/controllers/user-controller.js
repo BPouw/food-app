@@ -3,10 +3,6 @@ const jwt = require("jsonwebtoken");
 const pool = require("../dao/database");
 const logger = require("../dao/config").logger;
 const jwtSecretKey = require("../dao/config").jwtSecretKey;
-const mailVal = require("../util/emailvalidator");
-var emailre = new RegExp(
-  '/^(([^<>()[]\\.,;:s@"]+(.[^<>()[]\\.,;:s@"]+)*)|(".+"))@(([[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}])|(([a-zA-Z-0-9]+.)+[a-zA-Z]{2,}))$/'
-);
 
 module.exports = {
   login(req, res, next) {
