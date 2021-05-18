@@ -5,6 +5,7 @@ const port = process.env.PORT || 3000
 
 const mealroutes = require("./src/routes/meal-routes")
 const homeroutes = require("./src/routes/studenthome-routes")
+const userroutes = require("./src/routes/user-routes")
 
 app.use(express.json())
 
@@ -17,6 +18,7 @@ app.all("*", (req, res, next) => {
 
 app.use("/api", mealroutes)
 app.use("/api", homeroutes)
+app.use("/api", userroutes)
 
 app.get('/info', (req, res) => {
   log.info("info aangeroepen")

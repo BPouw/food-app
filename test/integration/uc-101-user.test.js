@@ -1,0 +1,105 @@
+process.env.DB_DATABASE = process.env.DB_DATABASE || "studenthome";
+process.env.NODE_ENV = "testing";
+process.env.LOGLEVEL = "error";
+console.log(`Running tests using database '${process.env.DB_DATABASE}'`);
+
+const chai = require("chai");
+const chaiHttp = require("chai-http");
+const server = require("../../server");
+const pool = require("../../src/dao/database");
+
+chai.should();
+chai.use(chaiHttp);
+
+const CLEAR_DB = "DELETE IGNORE FROM `user`";
+
+describe("Authentication", () => {
+  before((done) => {
+    console.log("beforeEach");
+    pool.query(CLEAR_DB, (err, rows, fields) => {
+      if (err) {
+        console.log(`beforeEach CLEAR error: ${err}`);
+        done(err);
+      } else {
+        done();
+      }
+    });
+  });
+
+  describe("UC101 Registation", () => {
+    it("TC-101-1 verplicht veld ontbreekt", (done) => {
+      chai
+        .request(server)
+        .post("/api/register")
+        .send({
+          firstname: "FirstName",
+          lastname: "LastName",
+          email: "test@test.nl",
+          studentnr: 1234567,
+          // no password
+        })
+        .end((err, res) => {
+          res.should.have.status(422);
+          done();
+        });
+    });
+  });
+
+  describe("UC101 Registation", () => {
+    it("TC-101-2 invalide email adres", (done) => {
+      chai
+        .request(server)
+        .post("/api/register")
+        .send({
+          firstname: "FirstName",
+          lastname: "LastName",
+          email: "fakeemail.com",
+          studentnr: 1234567,
+          password: "secret",
+        })
+        .end((err, res) => {
+          res.should.have.status(422);
+          done();
+        });
+    });
+  });
+
+  describe("UC101 Registation", () => {
+    it("TC-101-3 invalide wachtwoord", (done) => {
+      chai
+        .request(server)
+        .post("/api/register")
+        .send({
+          firstname: "FirstName",
+          lastname: "LastName",
+          email: "fakeemail.com",
+          studentnr: 1234567,
+          password: "",
+        })
+        .end((err, res) => {
+          res.should.have.status(422);
+          done();
+        });
+    });
+  });
+
+  describe("UC101 Registation", () => {
+    it("TC-101-5 gebruiker succesvol geregistreerd", (done) => {
+      chai
+        .request(server)
+        .post("/api/register")
+        .send({
+          firstname: "FirstName",
+          lastname: "LastName",
+          email: "test@test.nl",
+          studentnr: 1234567,
+          password: "secret",
+        })
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.should.be.a("object");
+          done();
+        });
+    });
+  });
+});

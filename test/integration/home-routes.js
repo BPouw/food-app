@@ -22,7 +22,7 @@ describe("StudentHome", function () {
           housenr: 7,
           zipcode: "4306AL",
           city: "nieuwerkerk",
-          phonenr: "0637170530"
+          phonenr: "0637170530",
         })
         .end((err, res) => {
           assert.ifError(err);
@@ -53,7 +53,7 @@ describe("StudentHome", function () {
           housenr: 7,
           zipcode: "4306ALL",
           city: "nieuwerkerk",
-          phonenr: "0637170530"
+          phonenr: "0637170530",
         })
         .end((err, res) => {
           assert.ifError(err);
@@ -84,7 +84,7 @@ describe("StudentHome", function () {
           housenr: 7,
           zipcode: "4306AL",
           city: "nieuwerkerk",
-          phonenr: "06371705300"
+          phonenr: "06371705300",
         })
         .end((err, res) => {
           assert.ifError(err);
@@ -94,7 +94,9 @@ describe("StudentHome", function () {
           res.body.should.be.an("object").that.has.all.keys("message", "error");
 
           let { message, error } = res.body;
-          message.should.be.a("string").that.equals("phone number wrong format");
+          message.should.be
+            .a("string")
+            .that.equals("phone number wrong format");
           error.should.be.a("string");
 
           done();
@@ -105,16 +107,16 @@ describe("StudentHome", function () {
 
 describe("StudentHome", function () {
   describe("create", function () {
-    before(function() {
+    before(function () {
       const item1 = {
         name: "Gezellig studenthuis",
         street: "Erlingsteenstraat",
         housenr: 7,
         zipcode: "4306AL",
         city: "nieuwerkerk",
-        phonenr: "06371705300"
-      }
-      database.db = [item1]
+        phonenr: "06371705300",
+      };
+      database.db = [item1];
     });
     it("TC-201-4 should return valid error when student home already exists", (done) => {
       chai
@@ -126,7 +128,7 @@ describe("StudentHome", function () {
           housenr: 7,
           zipcode: "4306AL",
           city: "nieuwerkerk",
-          phonenr: "0637170530"
+          phonenr: "0637170530",
         })
         .end((err, res) => {
           assert.ifError(err);
@@ -136,7 +138,11 @@ describe("StudentHome", function () {
           res.body.should.be.an("object").that.has.all.keys("message", "error");
 
           let { message, error } = res.body;
-          message.should.be.a("string").that.equals("Address is already registered, talk to your roommates");
+          message.should.be
+            .a("string")
+            .that.equals(
+              "Address is already registered, talk to your roommates"
+            );
           error.should.be.a("string");
 
           done();
@@ -147,8 +153,8 @@ describe("StudentHome", function () {
 
 describe("StudentHome", function () {
   describe("create", function () {
-    before(function() {
-      database.db = []
+    before(function () {
+      database.db = [];
     });
     it("TC-201-6 should accept a valid studenthome", (done) => {
       chai
@@ -160,7 +166,7 @@ describe("StudentHome", function () {
           housenr: 6,
           zipcode: "4306AL",
           city: "nieuwerkerk",
-          phonenr: "0637170530"
+          phonenr: "0637170530",
         })
         .end((err, res) => {
           res.should.have.status(200);
@@ -181,8 +187,8 @@ describe("StudentHome", function () {
 
 describe("StudentHome", function () {
   describe("getAll", function () {
-    before(function() {
-      database.db = []
+    before(function () {
+      database.db = [];
     });
     it("TC-202-1 should return an empty list", (done) => {
       chai
@@ -195,7 +201,7 @@ describe("StudentHome", function () {
           res.body.should.be.an("object").that.has.all.keys("status");
 
           let { status, result } = res.body;
-          status.should.be.a("string").that.equals("no items found");  
+          status.should.be.a("string").that.equals("no items found");
           done();
         });
     });
@@ -204,23 +210,26 @@ describe("StudentHome", function () {
 
 describe("StudentHome", function () {
   describe("getAll", function () {
-    before(function() {
+    before(function () {
+      const item1 = {
+        name: "Blade runner",
+        street: "Erlingsteenstraat",
+        housenr: 7,
+        zipcode: "4306AL",
+        phonenr: "0637170530",
+        city: "nieuwerkerk",
+      };
 
-      const item1 = {name: "Blade runner",
-      street: "Erlingsteenstraat",
-      housenr: 7,
-      zipcode : "4306AL",
-        phonenr : "0637170530",
-      city : "nieuwerkerk" }
-       
-      const item2 = {name: "Huis Huis",
-      street: "Hoevensdijk",
-      housenr: 16,
-      zipcode : "4306AL",
-        phonenr : "0637170530",
-      city : "Breda" }
+      const item2 = {
+        name: "Huis Huis",
+        street: "Hoevensdijk",
+        housenr: 16,
+        zipcode: "4306AL",
+        phonenr: "0637170530",
+        city: "Breda",
+      };
 
-      database.db = [item1, item2]
+      database.db = [item1, item2];
     });
     it("TC-202-2 should return a list with 2 items", (done) => {
       chai
@@ -234,8 +243,8 @@ describe("StudentHome", function () {
 
           let { status, result } = res.body;
           status.should.be.a("string").that.equals("succes");
-          expect(result).to.be.an('array');
-          expect(result).to.have.length(2);    
+          expect(result).to.be.an("array");
+          expect(result).to.have.length(2);
           done();
         });
     });
@@ -244,16 +253,17 @@ describe("StudentHome", function () {
 
 describe("StudentHome", function () {
   describe("getAll", function () {
-    before(function() {
- 
-      const item1 = {name: "Huis Huis",
-      street: "Hoevensdijk",
-      housenr: 16,
-      zipcode : "4306AL",
-        phonenr : "0637170530",
-      city : "Breda" }
+    before(function () {
+      const item1 = {
+        name: "Huis Huis",
+        street: "Hoevensdijk",
+        housenr: 16,
+        zipcode: "4306AL",
+        phonenr: "0637170530",
+        city: "Breda",
+      };
 
-      database.db = [item1]
+      database.db = [item1];
     });
     it("TC-202-3 should return no items when city is invalid", (done) => {
       chai
@@ -266,7 +276,7 @@ describe("StudentHome", function () {
           res.body.should.be.an("object").that.has.all.keys("status");
 
           let { status, result } = res.body;
-          status.should.be.a("string").that.equals("no items found");  
+          status.should.be.a("string").that.equals("no items found");
           done();
         });
     });
@@ -275,16 +285,17 @@ describe("StudentHome", function () {
 
 describe("StudentHome", function () {
   describe("getAll", function () {
-    before(function() {
- 
-      const item1 = {name: "Huis Huis",
-      street: "Hoevensdijk",
-      housenr: 16,
-      zipcode : "4306AL",
-        phonenr : "0637170530",
-      city : "Breda" }
+    before(function () {
+      const item1 = {
+        name: "Huis Huis",
+        street: "Hoevensdijk",
+        housenr: 16,
+        zipcode: "4306AL",
+        phonenr: "0637170530",
+        city: "Breda",
+      };
 
-      database.db = [item1]
+      database.db = [item1];
     });
     it("TC-202-4 should return no items when name is invalid", (done) => {
       chai
@@ -297,34 +308,35 @@ describe("StudentHome", function () {
           res.body.should.be.an("object").that.has.all.keys("status");
 
           let { status, result } = res.body;
-          status.should.be.a("string").that.equals("no items found");  
+          status.should.be.a("string").that.equals("no items found");
           done();
         });
     });
   });
 });
 
-
-
 describe("StudentHome", function () {
   describe("getAll", function () {
-    before(function() {
+    before(function () {
+      const item1 = {
+        name: "Blade runner",
+        street: "Erlingsteenstraat",
+        housenr: 7,
+        zipcode: "4306AL",
+        phonenr: "0637170530",
+        city: "nieuwerkerk",
+      };
 
-      const item1 = {name: "Blade runner",
-      street: "Erlingsteenstraat",
-      housenr: 7,
-      zipcode : "4306AL",
-        phonenr : "0637170530",
-      city : "nieuwerkerk" }
-       
-      const item2 = {name: "Huis Huis",
-      street: "Hoevensdijk",
-      housenr: 16,
-      zipcode : "4306AL",
-        phonenr : "0637170530",
-      city : "Breda" }
+      const item2 = {
+        name: "Huis Huis",
+        street: "Hoevensdijk",
+        housenr: 16,
+        zipcode: "4306AL",
+        phonenr: "0637170530",
+        city: "Breda",
+      };
 
-      database.db = [item1, item2]
+      database.db = [item1, item2];
     });
     it("TC-202-5 should return a list with the queried city", (done) => {
       chai
@@ -338,8 +350,8 @@ describe("StudentHome", function () {
 
           let { status, result } = res.body;
           status.should.be.a("string").that.equals("succes");
-          expect(result).to.be.an('array');
-          expect(result).to.have.length(1);    
+          expect(result).to.be.an("array");
+          expect(result).to.have.length(1);
           done();
         });
     });
@@ -348,23 +360,26 @@ describe("StudentHome", function () {
 
 describe("StudentHome", function () {
   describe("getAll", function () {
-    before(function() {
+    before(function () {
+      const item1 = {
+        name: "Blade runner",
+        street: "Erlingsteenstraat",
+        housenr: 7,
+        zipcode: "4306AL",
+        phonenr: "0637170530",
+        city: "nieuwerkerk",
+      };
 
-      const item1 = {name: "Blade runner",
-      street: "Erlingsteenstraat",
-      housenr: 7,
-      zipcode : "4306AL",
-        phonenr : "0637170530",
-      city : "nieuwerkerk" }
-       
-      const item2 = {name: "Huis Huis",
-      street: "Hoevensdijk",
-      housenr: 16,
-      zipcode : "4306AL",
-        phonenr : "0637170530",
-      city : "Breda" }
+      const item2 = {
+        name: "Huis Huis",
+        street: "Hoevensdijk",
+        housenr: 16,
+        zipcode: "4306AL",
+        phonenr: "0637170530",
+        city: "Breda",
+      };
 
-      database.db = [item1, item2]
+      database.db = [item1, item2];
     });
     it("TC-202-6 should return a list with the queried name", (done) => {
       chai
@@ -378,30 +393,30 @@ describe("StudentHome", function () {
 
           let { status, result } = res.body;
           status.should.be.a("string").that.equals("succes");
-          expect(result).to.be.an('array');
-          expect(result).to.have.length(1);    
+          expect(result).to.be.an("array");
+          expect(result).to.have.length(1);
           done();
         });
     });
   });
 });
 
-
 // TC-203
 
 describe("StudentHome", function () {
   describe("getById", function () {
-    before(function() {
+    before(function () {
+      const item1 = {
+        name: "Blade runner",
+        street: "Erlingsteenstraat",
+        housenr: 7,
+        zipcode: "4306AL",
+        phonenr: "0637170530",
+        city: "nieuwerkerk",
+        id: 0,
+      };
 
-      const item1 = {name: "Blade runner",
-      street: "Erlingsteenstraat",
-      housenr: 7,
-      zipcode : "4306AL",
-        phonenr : "0637170530",
-      city : "nieuwerkerk",
-      id : 0}
-       
-      database.db = [item1]
+      database.db = [item1];
     });
     it("TC-203-1 student home id doesn't exist", (done) => {
       chai
@@ -424,18 +439,18 @@ describe("StudentHome", function () {
 
 describe("StudentHome", function () {
   describe("getById", function () {
-    before(function() {
+    before(function () {
+      const item1 = {
+        name: "Blade runner",
+        street: "Erlingsteenstraat",
+        housenr: 7,
+        zipcode: "4306AL",
+        phonenr: "0637170530",
+        city: "nieuwerkerk",
+        id: 0,
+      };
 
-      const item1 = {name: "Blade runner",
-      street: "Erlingsteenstraat",
-      housenr: 7,
-      zipcode : "4306AL",
-      phonenr : "0637170530",
-      city : "nieuwerkerk",
-      id : 0 }
-       
-      database.db = [item1]
-
+      database.db = [item1];
     });
     it("TC-203-2 student home id exists", (done) => {
       chai
@@ -456,7 +471,7 @@ describe("StudentHome", function () {
   });
 });
 
-// TC-204 
+// TC-204
 
 describe("StudentHome", function () {
   describe("update", function () {
@@ -470,7 +485,7 @@ describe("StudentHome", function () {
           housenr: 7,
           zipcode: "4306AL",
           city: "nieuwerkerk",
-          phonenr: "0637170530"
+          phonenr: "0637170530",
         })
         .end((err, res) => {
           assert.ifError(err);
@@ -501,7 +516,7 @@ describe("StudentHome", function () {
           housenr: 7,
           zipcode: "4306ALL",
           city: "nieuwerkerk",
-          phonenr: "0637170530"
+          phonenr: "0637170530",
         })
         .end((err, res) => {
           assert.ifError(err);
@@ -532,7 +547,7 @@ describe("StudentHome", function () {
           housenr: 7,
           zipcode: "4306AL",
           city: "nieuwerkerk",
-          phonenr: "06371705300"
+          phonenr: "06371705300",
         })
         .end((err, res) => {
           assert.ifError(err);
@@ -542,7 +557,9 @@ describe("StudentHome", function () {
           res.body.should.be.an("object").that.has.all.keys("message", "error");
 
           let { message, error } = res.body;
-          message.should.be.a("string").that.equals("phone number wrong format");
+          message.should.be
+            .a("string")
+            .that.equals("phone number wrong format");
           error.should.be.a("string");
 
           done();
@@ -553,16 +570,16 @@ describe("StudentHome", function () {
 
 describe("StudentHome", function () {
   describe("update", function () {
-    before(function() {
+    before(function () {
       const item1 = {
         name: "Gezellig studenthuis",
         street: "Erlingsteenstraat",
         housenr: 7,
         zipcode: "4306AL",
         city: "nieuwerkerk",
-        phonenr: "06371705300"
-      }
-      database.db = [item1]
+        phonenr: "06371705300",
+      };
+      database.db = [item1];
     });
     it("TC-204-4 should return valid error when student home doesn't exist", (done) => {
       chai
@@ -574,7 +591,7 @@ describe("StudentHome", function () {
           housenr: 6,
           zipcode: "4306AL",
           city: "nieuwerkerk",
-          phonenr: "0637170530"
+          phonenr: "0637170530",
         })
         .end((err, res) => {
           assert.ifError(err);
@@ -595,16 +612,17 @@ describe("StudentHome", function () {
 
 describe("StudentHome", function () {
   describe("update", function () {
-    before(function() {
+    before(function () {
+      const item1 = {
+        name: "Blade runner",
+        street: "Erlingsteenstraat",
+        housenr: 6,
+        zipcode: "4306AL",
+        phonenr: "0637170530",
+        city: "nieuwerkerk",
+      };
 
-      const item1 = {name: "Blade runner",
-      street: "Erlingsteenstraat",
-      housenr: 6,
-      zipcode : "4306AL",
-        phonenr : "0637170530",
-      city : "nieuwerkerk" }
-       
-      database.db = [item1]
+      database.db = [item1];
     });
     it("TC-204-6 should accept a valid studenthome", (done) => {
       chai
@@ -616,7 +634,7 @@ describe("StudentHome", function () {
           housenr: 6,
           zipcode: "4306AL",
           city: "nieuwerkerk",
-          phonenr: "0637170530"
+          phonenr: "0637170530",
         })
         .end((err, res) => {
           res.should.have.status(200);
@@ -637,7 +655,7 @@ describe("StudentHome", function () {
 
 describe("StudentHome", function () {
   describe("delete", function () {
-    before(function() {
+    before(function () {
       const item1 = {
         name: "Gezellig studenthuis",
         street: "Erlingsteenstraat",
@@ -645,9 +663,9 @@ describe("StudentHome", function () {
         zipcode: "4306AL",
         city: "nieuwerkerk",
         phonenr: "06371705300",
-        id: 0
-      }
-      database.db = [item1]
+        id: 0,
+      };
+      database.db = [item1];
     });
     it("TC-205-1 should return valid error when trying to delete home that doesn't exist", (done) => {
       chai
@@ -669,7 +687,7 @@ describe("StudentHome", function () {
 
 describe("StudentHome", function () {
   describe("delete", function () {
-    before(function() {
+    before(function () {
       const item1 = {
         name: "Gezellig studenthuis",
         street: "Erlingsteenstraat",
@@ -677,9 +695,9 @@ describe("StudentHome", function () {
         zipcode: "4306AL",
         city: "nieuwerkerk",
         phonenr: "06371705300",
-        id: 0
-      }
-      database.db = [item1]
+        id: 0,
+      };
+      database.db = [item1];
     });
     it("TC-205-4 should return status 200 and the object when doing a successfull delete", (done) => {
       chai
@@ -693,7 +711,7 @@ describe("StudentHome", function () {
 
           let { status, result } = res.body;
           status.should.be.a("string").that.equals("succes");
-          expect(result).to.be.an('array');
+          expect(result).to.be.an("array");
           expect(result).to.have.length(1);
 
           done();
@@ -701,9 +719,3 @@ describe("StudentHome", function () {
     });
   });
 });
-
-
-
-
-
-
