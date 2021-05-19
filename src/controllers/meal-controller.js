@@ -6,8 +6,9 @@ const pool = require("../dao/database");
 
 module.exports = {
   validateMeal(req, res, next) {
-    console.log("validate meal");
-    console.log(req.body);
+    logger.info("validate meal");
+    logger.info(req.body);
+
     try {
       const { name, descr, available, price, allergies, ingredients } =
         req.body;
@@ -26,7 +27,7 @@ module.exports = {
   },
 
   create: (req, res, next) => {
-    log.info("meal.create called");
+    logger.info("meal.create called");
     const meal = req.body;
     let { name, descr, available, price, allergies, ingredients } = meal;
 
@@ -36,7 +37,10 @@ module.exports = {
     var datenow = new Date().toLocaleString();
 
     var parsedDate = Date.parse(available);
-    var dateavailable = new Date(parsedDate).toLocaleString();
+    dateavailable = new Date(parsedDate);
+    logger.info(dateavailable);
+
+    datenow = new Date().toISOString().slice(0, 19).replace("T", " ");
 
     logger.info(datenow);
     logger.info(dateavailable);
@@ -95,7 +99,7 @@ module.exports = {
   },
 
   update: (req, res, next) => {
-    log.info("meal.update called");
+    logger.info("meal.update called");
     const mealid = req.params.mealId;
     const userid = req.userId;
     const homeid = req.params.homeId;
@@ -178,7 +182,7 @@ module.exports = {
   },
 
   getAll: (req, res, next) => {
-    log.info("meal.getAll called");
+    logger.info("meal.getAll called");
     const homeid = req.params.homeId;
     let sqlQuery = "SELECT * from meal WHERE StudenthomeID = " + homeid;
     logger.debug("getAll", "sqlQuery =", sqlQuery);
@@ -216,7 +220,7 @@ module.exports = {
   },
 
   info: (req, res, next) => {
-    log.info("meal.info called");
+    logger.info("meal.info called");
     const id = req.params.homeId;
     const mealid = req.params.mealId;
 
@@ -267,7 +271,7 @@ module.exports = {
   },
 
   delete: (req, res, next) => {
-    log.info("meal.delete called");
+    logger.info("meal.delete called");
     const homeid = req.params.homeId;
     const userid = req.userId;
     const mealid = req.params.mealId;

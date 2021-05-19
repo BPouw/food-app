@@ -3,9 +3,12 @@ const jwt = require("jsonwebtoken");
 const pool = require("../dao/database");
 const logger = require("../dao/config").logger;
 const jwtSecretKey = require("../dao/config").jwtSecretKey;
+var pattern =
+  /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 module.exports = {
   login(req, res, next) {
+    logger.info("user.login called");
     pool.getConnection((err, connection) => {
       if (err) {
         logger.error("Error getting connection from pool");
@@ -74,6 +77,11 @@ module.exports = {
       assert(
         typeof req.body.password === "string",
         "password must be a string."
+      );
+      assert(req.body.password.length > 2, "password must have more length.");
+      assert(
+        pattern.test(String(req.body.email).toLowerCase()),
+        "email wrong format"
       );
       next();
     } catch (ex) {
@@ -145,8 +153,6 @@ module.exports = {
   validateRegister(req, res, next) {
     // Verify that we receive the expected input
     var emailvariable = req.body.email;
-    var pattern =
-      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     try {
       assert(
         typeof req.body.firstname === "string",
@@ -162,7 +168,10 @@ module.exports = {
         "password must be a string."
       );
       assert(req.body.password.length > 0, "password can't be empty");
-      assert(pattern.test(String(emailvariable).toLowerCase()));
+      assert(
+        pattern.test(String(emailvariable).toLowerCase()),
+        "email wrong format"
+      );
 
       next();
     } catch (ex) {

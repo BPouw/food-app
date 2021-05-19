@@ -7,6 +7,7 @@ const chai = require("chai");
 const chaiHttp = require("chai-http");
 const server = require("../../server");
 const pool = require("../../src/dao/database");
+const assert = require("assert");
 
 chai.should();
 chai.use(chaiHttp);
@@ -40,6 +41,14 @@ describe("Authentication", () => {
         })
         .end((err, res) => {
           res.should.have.status(400);
+          res.body.should.be.a("object");
+
+          let { message, datetime } = res.body;
+          message.should.be
+            .a("string")
+            .that.equals(
+              "AssertionError [ERR_ASSERTION]: password must be a string."
+            );
           done();
         });
     });
@@ -59,6 +68,12 @@ describe("Authentication", () => {
         })
         .end((err, res) => {
           res.should.have.status(400);
+          res.body.should.be.a("object");
+
+          let { message, datetime } = res.body;
+          message.should.be
+            .a("string")
+            .that.equals("AssertionError [ERR_ASSERTION]: email wrong format");
           done();
         });
     });
@@ -78,6 +93,14 @@ describe("Authentication", () => {
         })
         .end((err, res) => {
           res.should.have.status(400);
+          res.body.should.be.a("object");
+
+          let { message, datetime } = res.body;
+          message.should.be
+            .a("string")
+            .that.equals(
+              "AssertionError [ERR_ASSERTION]: password can't be empty"
+            );
           done();
         });
     });
@@ -98,8 +121,34 @@ describe("Authentication", () => {
         .end((err, res) => {
           res.should.have.status(200);
           res.body.should.be.a("object");
+          const response = res.body;
+          response.should.have.property("token").which.is.a("string");
           done();
         });
     });
+  });
+});
+
+describe("UC101 Registation", () => {
+  it("TC-101-4 gebruiker bestaat al", (done) => {
+    chai
+      .request(server)
+      .post("/api/register")
+      .send({
+        firstname: "FirstName",
+        lastname: "LastName",
+        email: "test@test.nl",
+        studentnr: 1234567,
+        password: "secret",
+      })
+      .end((err, res) => {
+        assert.ifError(err);
+        res.should.have.status(400);
+        let { message, datetime } = res.body;
+        message.should.be
+          .a("string")
+          .that.equals("This email has already been taken.");
+        done();
+      });
   });
 });

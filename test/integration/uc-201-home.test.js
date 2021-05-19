@@ -129,54 +129,6 @@ describe("StudentHome", function () {
   });
 });
 
-// describe("StudentHome", function () {
-//   describe("create", function () {
-//     before(function () {
-//       const item1 = {
-//         name: "Gezellig studenthuis",
-//         street: "Erlingsteenstraat",
-//         housenr: 7,
-//         zipcode: "4306AL",
-//         city: "nieuwerkerk",
-//         phonenr: "06371705300",
-//       };
-//       database.db = [item1];
-//     });
-//     it("UC-201-4 should return valid error when student home already exists", (done) => {
-//       chai
-//         .request(server)
-//         .post("/api/studenthome")
-//         .send({
-//           name: "Gezellig studenthuis",
-//           street: "Erlingsteenstraat",
-//           housenr: 7,
-//           zipcode: "4306AL",
-//           city: "nieuwerkerk",
-//           phonenr: "0637170530",
-//         })
-//         .end((err, res) => {
-//           assert.ifError(err);
-//           res.should.have.status(400);
-//           res.should.be.an("object");
-
-//           res.body.should.be
-//             .an("object")
-//             .that.has.all.keys("message", "datetime");
-
-//           let { message, error } = res.body;
-//           message.should.be
-//             .a("string")
-//             .that.equals(
-//               "Address is already registered, talk to your roommates"
-//             );
-//           error.should.be.a("string");
-
-//           done();
-//         });
-//     });
-//   });
-// });
-
 describe("StudentHome", function () {
   describe("create", function () {
     it("UC-201-5 should reject studenthome when not signed in", (done) => {
@@ -195,6 +147,12 @@ describe("StudentHome", function () {
         })
         .end((err, res) => {
           res.should.have.status(401);
+          res.body.should.be
+            .an("object")
+            .that.has.all.keys("datetime", "error");
+
+          let { error, datetime } = res.body;
+          error.should.be.a("string").that.equals("Not authorized");
           done();
         });
     });
@@ -232,6 +190,44 @@ describe("StudentHome", function () {
             res.should.have.status(200);
             res.should.be.an("object");
             res.body.should.be.an("object").that.has.all.keys("result");
+            done();
+          });
+      });
+    });
+  });
+});
+
+describe("StudentHome", function () {
+  describe("create", function () {
+    it("UC-201-4 should return valid error when student home already exists", (done) => {
+      jwt.sign({ id: 1 }, "secret", { expiresIn: "2h" }, (err, token) => {
+        chai
+          .request(server)
+          .post("/api/studenthome")
+          .set("authorization", "Bearer " + token)
+          .send({
+            name: "Gezellig studenthuis",
+            street: "Erlingsteenstraat",
+            housenr: 6,
+            zipcode: "4306AL",
+            city: "nieuwerkerk",
+            phonenr: "0637170530",
+          })
+          .end((err, res) => {
+            assert.ifError(err);
+            res.should.have.status(400);
+            res.body.should.be
+              .an("object")
+              .that.has.all.keys("message", "error");
+
+            let { error, message } = res.body;
+            message.should.be.a("string").that.equals("home already exists");
+            error.should.be
+              .a("string")
+              .that.equals(
+                "Error: ER_DUP_ENTRY: Duplicate entry '4306AL-6' for key 'UniqueAdress'"
+              );
+
             done();
           });
       });

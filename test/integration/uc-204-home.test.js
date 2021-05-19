@@ -14,11 +14,6 @@ const jwt = require("jsonwebtoken");
 chai.should();
 chai.use(chaiHttp);
 
-const CLEAR_DB = "DELETE IGNORE FROM `user`";
-const INSERT_USER =
-  "INSERT INTO `user` (`ID`, `First_Name`, `Last_Name`, `Email`, `Student_Number`, `Password` ) VALUES" +
-  '(1, "first", "last", "name@server.nl","1234567", "secret");';
-
 describe("StudentHome", function () {
   describe("update", function () {
     it("UC-204-1 should return valid error when required value is not present", (done) => {
@@ -129,53 +124,38 @@ describe("StudentHome", function () {
   });
 });
 
-// describe("StudentHome", function () {
-//   describe("create", function () {
-//     before(function () {
-//       const item1 = {
-//         name: "Gezellig studenthuis",
-//         street: "Erlingsteenstraat",
-//         housenr: 7,
-//         zipcode: "4306AL",
-//         city: "nieuwerkerk",
-//         phonenr: "06371705300",
-//       };
-//       database.db = [item1];
-//     });
-//     it("TC-201-4 should return valid error when student home already exists", (done) => {
-//       chai
-//         .request(server)
-//         .post("/api/studenthome")
-//         .send({
-//           name: "Gezellig studenthuis",
-//           street: "Erlingsteenstraat",
-//           housenr: 7,
-//           zipcode: "4306AL",
-//           city: "nieuwerkerk",
-//           phonenr: "0637170530",
-//         })
-//         .end((err, res) => {
-//           assert.ifError(err);
-//           res.should.have.status(400);
-//           res.should.be.an("object");
+describe("StudentHome", function () {
+  describe("update", function () {
+    it("UC-204-4 should return valid error when home doesn't exists", (done) => {
+      jwt.sign({ id: 1 }, "secret", { expiresIn: "2h" }, (err, token) => {
+        chai
+          .request(server)
+          .put("/api/studenthome/100")
+          .set("authorization", "Bearer " + token)
+          .send({
+            name: "Gezellig studenthuis",
+            street: "Erlingsteenstraat",
+            housenr: 7,
+            zipcode: "4306AL",
+            city: "nieuwerkerk",
+            phonenr: "0637170530",
+          })
+          .end((err, res) => {
+            res.should.have.status(400);
+            res.should.be.an("object");
 
-//           res.body.should.be
-//             .an("object")
-//             .that.has.all.keys("message", "datetime");
+            res.body.should.be.an("object").that.has.all.keys("error");
 
-//           let { message, error } = res.body;
-//           message.should.be
-//             .a("string")
-//             .that.equals(
-//               "Address is already registered, talk to your roommates"
-//             );
-//           error.should.be.a("string");
+            let { error } = res.body;
 
-//           done();
-//         });
-//     });
-//   });
-// });
+            error.should.be.a("string").that.equals("ID does not exist");
+
+            done();
+          });
+      });
+    });
+  });
+});
 
 describe("StudentHome", function () {
   describe("update", function () {
@@ -207,7 +187,7 @@ describe("StudentHome", function () {
       jwt.sign({ id: 1 }, "secret", { expiresIn: "2h" }, (err, token) => {
         chai
           .request(server)
-          .put("/api/studenthome/0")
+          .put("/api/studenthome/2")
           .set("authorization", "Bearer " + token)
           .send({
             name: "Gezellig studenthuis",

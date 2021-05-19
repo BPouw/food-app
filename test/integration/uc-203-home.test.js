@@ -47,6 +47,8 @@ describe("StudentHome", function () {
         .end((err, res) => {
           res.should.have.status(200);
           res.should.be.an("object");
+          let { result } = res.body;
+          result.should.be.a("array");
           done();
         });
     });

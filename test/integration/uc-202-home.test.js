@@ -94,6 +94,10 @@ describe("StudentHome", function () {
         .get("/api/studenthome?city=asgard")
         .end((err, res) => {
           res.should.have.status(404);
+
+          let { error } = res.body;
+          error.should.be.a("string").that.equals("No entries were found");
+
           done();
         });
     });
@@ -108,6 +112,8 @@ describe("StudentHome", function () {
         .get("/api/studenthome?name=borishuis")
         .end((err, res) => {
           res.should.have.status(404);
+          let { error } = res.body;
+          error.should.be.a("string").that.equals("No entries were found");
           done();
         });
     });

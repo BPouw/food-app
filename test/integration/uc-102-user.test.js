@@ -17,9 +17,18 @@ describe("UC102 Login", () => {
       .post("/api/login")
       .send({
         email: "test@test.nl",
+        // no password
       })
       .end((err, res) => {
         res.should.have.status(400);
+        res.body.should.be.a("object");
+
+        let { error, datetime } = res.body;
+        error.should.be
+          .a("string")
+          .that.equals(
+            "AssertionError [ERR_ASSERTION]: password must be a string."
+          );
         done();
       });
   });
@@ -36,6 +45,10 @@ describe("UC102 Login", () => {
       })
       .end((err, res) => {
         res.should.have.status(400);
+        let { error, datetime } = res.body;
+        error.should.be
+          .a("string")
+          .that.equals("AssertionError [ERR_ASSERTION]: email wrong format");
         done();
       });
   });
@@ -48,10 +61,16 @@ describe("UC102 Login", () => {
       .post("/api/login")
       .send({
         email: "test@test.nl",
-        password: "notsosecret",
+        password: "",
       })
       .end((err, res) => {
         res.should.have.status(400);
+        let { error, datetime } = res.body;
+        error.should.be
+          .a("string")
+          .that.equals(
+            "AssertionError [ERR_ASSERTION]: password must have more length."
+          );
         done();
       });
   });
@@ -68,6 +87,10 @@ describe("UC102 Login", () => {
       })
       .end((err, res) => {
         res.should.have.status(400);
+        let { message, datetime } = res.body;
+        message.should.be
+          .a("string")
+          .that.equals("User not found or password invalid");
         done();
       });
   });

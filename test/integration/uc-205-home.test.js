@@ -56,13 +56,18 @@ describe("StudentHome", function () {
         .set("authorization", "Bearer " + token)
         .end((err, res) => {
           res.should.have.status(401);
+          res.body.should.be
+            .an("object")
+            .that.has.all.keys("datetime", "error");
+
+          let { error, datetime } = res.body;
+          error.should.be.a("string").that.equals("Not authorized");
           done();
         });
     });
   });
 });
 
-// geeft 404 moet 401 zijn somehow
 describe("StudentHome", function () {
   describe("delete", function () {
     it("TC-205-3 should return valid error when trying to delete a home thats not yours", (done) => {
@@ -73,6 +78,12 @@ describe("StudentHome", function () {
           .set("authorization", "Bearer " + token)
           .end((err, res) => {
             res.should.have.status(404);
+            let { error } = res.body;
+            error.should.be
+              .a("string")
+              .that.equals(
+                "Item not found of you do not have access to this item"
+              );
             done();
           });
       });
@@ -90,6 +101,10 @@ describe("StudentHome", function () {
           .set("authorization", "Bearer " + token)
           .end((err, res) => {
             res.should.have.status(200);
+            let { result } = res.body;
+            result.should.be
+              .a("string")
+              .that.equals("successfully deleted item");
             done();
           });
       });

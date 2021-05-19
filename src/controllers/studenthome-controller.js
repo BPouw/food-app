@@ -7,8 +7,8 @@ var ziprege = /^[1-9][0-9]{3} ?(?!sa|sd|ss)[a-z]{2}$/i;
 
 module.exports = {
   validateHome(req, res, next) {
-    console.log("validate home");
-    console.log(req.body);
+    logger.info("validate home");
+    logger.info(req.body);
     try {
       const { name, street, housenr, zipcode, city, phonenr } = req.body;
       assert(typeof name === "string", "name is missing!");
@@ -27,28 +27,8 @@ module.exports = {
     }
   },
 
-  validateHomeForUpdate(req, res, next) {
-    console.log("validate home");
-    console.log(req.body);
-    try {
-      const { name, street, housenr, zipcode, city, phonenr } = req.body;
-      assert(typeof name === "string", "name is missing!");
-      assert(typeof street === "string", "street is missing!");
-      assert(typeof housenr === "number", "housenumber is missing!");
-      assert(ziprege.test(zipcode), "zipcode wrong format");
-      assert(typeof zipcode === "string", "zipcode is missing!");
-      assert(typeof city === "string", "city is missing!");
-      assert(typeof phonenr === "string", "phone number is missing!");
-      assert(phonenr.length == 10, "phone number wrong format");
-      next();
-    } catch (err) {
-      console.log("Home data is invalid: ", err.message);
-      next({ message: err.message, errCode: 400 });
-    }
-  },
-
   create: (req, res, next) => {
-    log.info("studenthome.create called");
+    logger.info("studenthome.create called");
     const home = req.body;
 
     let { name, street, housenr, zipcode, city, phonenr } = home;
@@ -76,7 +56,7 @@ module.exports = {
             if (error) {
               logger.error("createHome", error.toString());
               res.status(400).json({
-                message: "createHome failed calling query",
+                message: "home already exists",
                 error: error.toString(),
               });
             }
@@ -243,12 +223,18 @@ module.exports = {
             }
             if (results) {
               logger.trace("results: ", results);
-              res.status(200).json({
-                result: {
-                  id: results.insertId,
-                  ...home,
-                },
-              });
+              if (results.affectedRows === 0) {
+                res.status(400).json({
+                  error: "ID does not exist",
+                });
+              } else {
+                res.status(200).json({
+                  result: {
+                    id: results.insertId,
+                    ...home,
+                  },
+                });
+              }
             }
           }
         );
