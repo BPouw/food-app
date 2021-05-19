@@ -20,8 +20,8 @@ variables:
   DB_HOST: mysql
 before_script:
   # Install the database into the node:latest container
-  - apt-get update
-  - apt-get -y install mysql-client
+    - apt-get update && apt-get install -y git curl libmcrypt-dev default-mysql-client
+    - mysql --version
   # Create our database by running the database.sql script
   - mysql --host=mysql --user="${DB_USER}" --password="${DB_PASSWORD}" ${DB_DATABASE} < studenthome.sql
   - mysqlshow --host=mysql --user="${DB_USER}" --password="${DB_PASSWORD}" ${DB_DATABASE}
