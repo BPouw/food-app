@@ -8,7 +8,6 @@
 
 stages:
   - testing
-  - analysis
   - deployment
 
 #
@@ -56,7 +55,7 @@ Testing:
     # Install the node packages that our server needs.
     - npm install --no-optional
   script:
-    - npm run coverage # also runs tests, see package.json
+    - npm test
 
 #
 # Deploy to Heroku
