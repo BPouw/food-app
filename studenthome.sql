@@ -1,6 +1,6 @@
- DROP DATABASE IF EXISTS `studenthome`;
- CREATE DATABASE `studenthome`;
- USE `studenthome`;
+-- DROP DATABASE IF EXISTS `studenthome`;
+-- CREATE DATABASE `studenthome`;
+-- USE `studenthome`;
 
 -- --
 -- -- Uncomment de volgende SQL statements om een user in de database te maken
@@ -255,3 +255,4 @@ SELECT `MealID`, COUNT(`Student_Number`) AS 'SignedUp', `MaxParticipants`
 FROM `view_participants`
 GROUP BY `MealID`
 ;
+
