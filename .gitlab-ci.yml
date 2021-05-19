@@ -8,7 +8,7 @@
 
 stages:
   - testing
-  - deployment
+  - production
 
 #
 #  We cache our dependencies for faster pipelines
