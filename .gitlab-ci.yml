@@ -8,8 +8,25 @@
 # image: node:latest
 
 stages:
-  - test
+  - testing
   - production
+
+
+cache:
+  key: one-key-to-rule-them-all
+  paths:
+    - node_modules/
+    - coverage/
+
+#
+# Global variables
+#
+variables:
+  # Configure mysql environment variables (https://hub.docker.com/_/mysql/)
+  MYSQL_DATABASE: GitLab_MySql_database
+  MYSQL_ROOT_PASSWORD: some_secret_password
+
+  
 services:
   - mysql:5.6
 variables:

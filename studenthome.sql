@@ -13,8 +13,8 @@
 -- CREATE USER 'studenthome_user'@'localhost' IDENTIFIED BY 'secret';
 
 -- -- geef rechten aan deze user
- GRANT SELECT, INSERT, DELETE, UPDATE ON `studenthome`.* TO 'studenthome_user'@'%';
- GRANT SELECT, INSERT, DELETE, UPDATE ON `studenthome`.* TO 'studenthome_user'@'localhost';
+-- GRANT SELECT, INSERT, DELETE, UPDATE ON `studenthome`.* TO 'studenthome_user'@'%';
+-- GRANT SELECT, INSERT, DELETE, UPDATE ON `studenthome`.* TO 'studenthome_user'@'localhost';
 
 DROP TABLE IF EXISTS `participants` ;
 DROP TABLE IF EXISTS `meal` ;
