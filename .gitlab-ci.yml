@@ -5,13 +5,16 @@
 # Secure Variables like $DB_PASSWORD can added by going to your
 # project’s Settings ➔ CI / CD ➔ Variables on the GitLab website.
 #
-# image: node:latest
 
 stages:
   - testing
-  - production
+  - analysis
+  - deployment
 
-
+#
+#  We cache our dependencies for faster pipelines
+#  https://docs.gitlab.com/ee/ci/caching/#sharing-caches-across-different-branches
+#
 cache:
   key: one-key-to-rule-them-all
   paths:
@@ -26,31 +29,34 @@ variables:
   MYSQL_DATABASE: GitLab_MySql_database
   MYSQL_ROOT_PASSWORD: some_secret_password
 
-  
-services:
-  - mysql:5.6
-variables:
-  NODE_ENV: development
-  DB_USER: root
-  DB_DATABASE: ${MYSQL_DATABASE}
-  DB_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-  DB_HOST: mysql
-before_script:
-  # Install the database into the node:latest container
-  - apt-get update && apt-get install -y git curl libmcrypt-dev default-mysql-client
-  - mysql --version
-  # Create our database by running the database.sql script
-  - mysql --host=mysql --user="${DB_USER}" --password="${DB_PASSWORD}" ${DB_DATABASE} < studenthome.sql
-  - mysqlshow --host=mysql --user="${DB_USER}" --password="${DB_PASSWORD}" ${DB_DATABASE}
-  # Install the node packages that our server needs.
-  - npm install --no-optional
-
-testing:
-  stage: test
+#
+# Testing nodejes backend
+# Our server uses a MySql database, so to run our testcases we also need a database.
+# We do NOT use the online production database, but spawn an independent test-db on Gitlab.
+# To do so, we have to install it into the container where we run our testcases.
+#
+Testing:
+  stage: testing
   image: node:latest
+  services:
+    - mysql:5.6
+  variables:
+    NODE_ENV: development
+    DB_USER: root
+    DB_DATABASE: ${MYSQL_DATABASE}
+    DB_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    DB_HOST: mysql
+  before_script:
+    # Install the database service into the node:latest image
+    - apt-get update && apt-get install -y git curl libmcrypt-dev default-mysql-client
+    - mysql --version
+    # Create tables and fill our database by inserting your *-data.sql script
+    - mysql --host=mysql --user="${DB_USER}" --password="${DB_PASSWORD}" ${DB_DATABASE} < studenthome.sql
+    - mysqlshow --host=mysql --user="${DB_USER}" --password="${DB_PASSWORD}" ${DB_DATABASE}
+    # Install the node packages that our server needs.
+    - npm install --no-optional
   script:
-    - npm run test
-    - npm run sonar
+    - npm run coverage # also runs tests, see package.json
 
 #
 # Deploy to Heroku
