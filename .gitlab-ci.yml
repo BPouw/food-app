@@ -56,8 +56,6 @@ Testing:
     - npm install --no-optional
   script:
     - npm test
-    - npm coverage
-    - npm sonar
 
 #
 # Deploy to Heroku
