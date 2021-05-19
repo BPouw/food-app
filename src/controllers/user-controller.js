@@ -52,7 +52,7 @@ module.exports = {
                 res.status(200).json(userinfo);
               } else {
                 logger.info("User not found or password invalid");
-                res.status(401).json({
+                res.status(400).json({
                   message: "User not found or password invalid",
                   datetime: new Date().toISOString(),
                 });
@@ -78,7 +78,7 @@ module.exports = {
       next();
     } catch (ex) {
       res
-        .status(422)
+        .status(400)
         .json({ error: ex.toString(), datetime: new Date().toISOString() });
     }
   },
@@ -168,7 +168,7 @@ module.exports = {
     } catch (ex) {
       logger.debug("validateRegister error: ", ex.toString());
       res
-        .status(422)
+        .status(400)
         .json({ message: ex.toString(), datetime: new Date().toISOString() });
     }
   },
@@ -183,7 +183,7 @@ module.exports = {
     const authHeader = req.headers.authorization;
     if (!authHeader) {
       logger.warn("Authorization header missing!");
-      res.status(401).json({
+      res.status(400).json({
         error: "Authorization header missing!",
         datetime: new Date().toISOString(),
       });

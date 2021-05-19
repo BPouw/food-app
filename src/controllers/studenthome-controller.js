@@ -3,6 +3,7 @@ const log = require("tracer").console();
 const config = require("../dao/config");
 const logger = config.logger;
 const pool = require("../dao/database");
+var ziprege = /^[1-9][0-9]{3} ?(?!sa|sd|ss)[a-z]{2}$/i;
 
 module.exports = {
   validateHome(req, res, next) {
@@ -13,7 +14,7 @@ module.exports = {
       assert(typeof name === "string", "name is missing!");
       assert(typeof street === "string", "street is missing!");
       assert(typeof housenr === "number", "housenumber is missing!");
-      assert(zipcode.length == 6, "zipcode wrong format");
+      assert(ziprege.test(zipcode), "zipcode wrong format");
       assert(typeof zipcode === "string", "zipcode is missing!");
       assert(typeof city === "string", "city is missing!");
       assert(typeof phonenr === "string", "phone number is missing!");
@@ -34,7 +35,7 @@ module.exports = {
       assert(typeof name === "string", "name is missing!");
       assert(typeof street === "string", "street is missing!");
       assert(typeof housenr === "number", "housenumber is missing!");
-      assert(zipcode.length == 6, "zipcode wrong format");
+      assert(ziprege.test(zipcode), "zipcode wrong format");
       assert(typeof zipcode === "string", "zipcode is missing!");
       assert(typeof city === "string", "city is missing!");
       assert(typeof phonenr === "string", "phone number is missing!");
@@ -145,9 +146,15 @@ module.exports = {
                 ...item,
               };
             });
-            res.status(200).json({
-              result: mappedResults,
-            });
+            if (queryParams.length > 0 && mappedResults.length == 0) {
+              res.status(404).json({
+                error: "No entries were found",
+              });
+            } else {
+              res.status(200).json({
+                result: mappedResults,
+              });
+            }
           }
         });
       }
@@ -155,7 +162,7 @@ module.exports = {
   },
 
   info: (req, res, next) => {
-    log.info("studenthome.info called");
+    logger.info("studenthome.info called");
     const homeId = req.params.homeId;
 
     let sqlQuery = "SELECT * FROM studenthome WHERE studenthome.ID = " + homeId;
@@ -183,9 +190,16 @@ module.exports = {
                 ...item,
               };
             });
-            res.status(200).json({
-              result: mappedResults,
-            });
+            if (mappedResults.length == 0) {
+              res.status(404).json({
+                status: "No homes found with that ID",
+              });
+            } else {
+              logger.info(mappedResults);
+              res.status(200).json({
+                result: mappedResults,
+              });
+            }
           }
         });
       }
@@ -270,10 +284,8 @@ module.exports = {
         if (results) {
           if (results.affectedRows === 0) {
             logger.trace("item was NOT deleted");
-            res.status(401).json({
-              result: {
-                error: "Item not found of you do not have access to this item",
-              },
+            res.status(404).json({
+              error: "Item not found of you do not have access to this item",
             });
           } else {
             logger.trace("item was deleted");

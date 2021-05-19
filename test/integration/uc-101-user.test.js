@@ -39,7 +39,7 @@ describe("Authentication", () => {
           // no password
         })
         .end((err, res) => {
-          res.should.have.status(422);
+          res.should.have.status(400);
           done();
         });
     });
@@ -58,7 +58,7 @@ describe("Authentication", () => {
           password: "secret",
         })
         .end((err, res) => {
-          res.should.have.status(422);
+          res.should.have.status(400);
           done();
         });
     });
@@ -77,7 +77,7 @@ describe("Authentication", () => {
           password: "",
         })
         .end((err, res) => {
-          res.should.have.status(422);
+          res.should.have.status(400);
           done();
         });
     });

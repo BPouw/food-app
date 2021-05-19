@@ -6,7 +6,6 @@ console.log(`Running tests using database '${process.env.DB_DATABASE}'`);
 const chai = require("chai");
 const chaiHttp = require("chai-http");
 const server = require("../../server");
-const pool = require("../../src/dao/database");
 
 chai.should();
 chai.use(chaiHttp);
@@ -20,7 +19,7 @@ describe("UC102 Login", () => {
         email: "test@test.nl",
       })
       .end((err, res) => {
-        res.should.have.status(422);
+        res.should.have.status(400);
         done();
       });
   });
@@ -36,7 +35,7 @@ describe("UC102 Login", () => {
         password: "secret",
       })
       .end((err, res) => {
-        res.should.have.status(401);
+        res.should.have.status(400);
         done();
       });
   });
@@ -52,7 +51,7 @@ describe("UC102 Login", () => {
         password: "notsosecret",
       })
       .end((err, res) => {
-        res.should.have.status(401);
+        res.should.have.status(400);
         done();
       });
   });
@@ -68,7 +67,7 @@ describe("UC102 Login", () => {
         password: "secret",
       })
       .end((err, res) => {
-        res.should.have.status(401);
+        res.should.have.status(400);
         done();
       });
   });
@@ -88,7 +87,6 @@ describe("UC102 Login", () => {
         res.body.should.be.a("object");
         const response = res.body;
         response.should.have.property("token").which.is.a("string");
-        // response.should.have.property('username').which.is.a('string')
         done();
       });
   });
